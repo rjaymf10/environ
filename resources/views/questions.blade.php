@@ -12,8 +12,8 @@
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center pb-2">
                         <div class="list-group list-options">
-                            @foreach($question->options() as $option)
-                            <a href="javascript:void(0);" data-id="{{ $question->id }}" data-option="{{ $option }}" class="option list-group-item list-group-item-action">{{ json_decode($question->options)[$option] }}</a>
+                            @foreach(json_decode($question->options) as $option)
+                            <a href="javascript:void(0);" data-id="{{ $question->id }}" data-option="{{ array_search($option, json_decode($question->options)) }}" class="option list-group-item list-group-item-action">{{ $option }}</a>
                             @endforeach
                         </div>
                     </div>
@@ -48,7 +48,7 @@
             var id = $(this).data('id');
             var answer = $(this).data('option');
             $.ajax({
-                type: "POST",
+                type: "post",
                 url: "{{ route('check') }}",
                 data: { 
                     id: id,
@@ -98,7 +98,7 @@
             console.log(ids);
             $('.next button').attr('disabled', true);
             $.ajax({
-                type: "POST",
+                type: "post",
                 url: "{{ route('next') }}",
                 data: { 
                     ids: ids
@@ -109,8 +109,8 @@
                     $('.next button').data('id', response['question']['id']);
                     $('.explation').empty();
                     $('.list-options').empty();
-                    jQuery.each(response["options"], function(i, val) {
-                        $('.list-options').append('<a href="javascript:void(0);" data-id="' + response["question"]["id"] + '" data-option="' + i + '" class="option list-group-item list-group-item-action">' + obj[i] + '</a>');
+                    jQuery.each(obj, function(i, val) {
+                        $('.list-options').append('<a href="javascript:void(0);" data-id="' + response["question"]["id"] + '" data-option="' + i + '" class="option list-group-item list-group-item-action">' + val + '</a>');
                     });
                     $('.question').text(response["question"]["question"]);
                 },

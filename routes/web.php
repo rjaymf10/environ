@@ -41,7 +41,6 @@ Route::post('/quiz/next', function (Request $request) {
 		$ids[] = $id;
 	}
 	$question = Question::select('id', 'question', 'options')->inRandomOrder()->whereNotIn('id', $ids)->first();
-	$options = $question->options();
-
-	return response()->json(array('question' => $question, 'options' => $options));
+	
+	return response()->json(array('question' => $question));
 })->name('next');
