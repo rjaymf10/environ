@@ -28,10 +28,10 @@ Route::get('/quiz', function () {
 Route::post('/check', function (Request $request) {
 	$question = Question::findOrFail($request->id);
 	if ($question->answer == $request->answer) {
-		return response()->json(array('status' => 'correct'));
+		return response()->json(array('status' => 'correct', 'explation' => $question->explation));
 	}
 	else {
-		return response()->json(array('status' => 'incorrect', 'correct_answer' => $question->answer));
+		return response()->json(array('status' => 'incorrect', 'correct_answer' => $question->answer, 'explation' => $question->explation));
 	}
 })->name('check');
 

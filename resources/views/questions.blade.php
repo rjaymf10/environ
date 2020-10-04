@@ -20,6 +20,9 @@
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center pb-2">
                         <button class="btn btn-primary next disabled" data-id="{{ $question->id }}">Next</button>
                     </div>
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center pb-2">
+                        <p class="explation"></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -82,6 +85,7 @@
                             }
                         });
                     }
+                    $('.explation').tect(response["explation"]);
                 },
                 failure: function (response) {
                     console.log(response);
