@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center pb-2 next">
-                        <button class="btn btn-primary button disabled" data-id="{{ $question->id }}">Next</button>
+                        <button class="btn btn-primary button" disabled="" data-id="{{ $question->id }}">Next</button>
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center pb-2">
                         <p class="explation"></p>
@@ -56,7 +56,7 @@
                 },
                 dataType: 'json',
                 success: function(response) {
-                    $('.next button').removeClass('disabled');
+                    $('.next button').attr('disabled', false);
                     if (response["status"] == "correct") {
                         $('a[data-option]').each(function (e) {
                             if (e == answer) {
@@ -89,13 +89,14 @@
                 },
                 failure: function (response) {
                     console.log(response);
-                }
+                },
+                timeout:3000
             });
         });
         $('.next').on('click', '.button', function () {
-            $('.next button').addClass('disabled');
             ids.push($(this).data('id'));
             console.log(ids);
+            $('.next button').attr('disabled', true);
             $.ajax({
                 type: "POST",
                 url: "{{ route('next') }}",
@@ -105,7 +106,7 @@
                 dataType: 'json',
                 success: function(response) {
                     var obj = JSON.parse(response['question']['options']);
-                    $('.next button').attr('data-id', response['question']['id']);
+                    $('.next button').data('id', response['question']['id']);
                     $('.explation').empty();
                     $('.list-options').empty();
                     jQuery.each(response["options"], function(i, val) {
@@ -115,7 +116,8 @@
                 },
                 failure: function(response) {
                     console.log(response);
-                }
+                },
+                timeout:3000
             });
         });
     });
