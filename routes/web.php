@@ -36,8 +36,12 @@ Route::post('/check', function (Request $request) {
 })->name('check');
 
 Route::post('/quiz/next', function (Request $request) {
-	$question = Question::select('id', 'question', 'options')->inRandomOrder()->whereNotIn('id', $request->ids)->first();
+	$ids = array();
+	foreach ($request->ids as $id) {
+		$ids[] = $id;
+	}
+	$question = Question::select('id', 'question', 'options')->inRandomOrder()->whereNotIn('id', $ids)->first();
 	$options = $question->options();
 
-	return response()->json(array('$question' => $question, 'options' => $options));
+	return response()->json(array('question' => $question, 'options' => $options));
 })->name('next');

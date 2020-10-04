@@ -17,8 +17,8 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center pb-2">
-                        <button class="btn btn-primary next disabled" data-id="{{ $question->id }}">Next</button>
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center pb-2 next">
+                        <button class="btn btn-primary button disabled" data-id="{{ $question->id }}">Next</button>
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center pb-2">
                         <p class="explation"></p>
@@ -44,7 +44,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        $('.option').on('click', function () {
+        $('.list-options').on('click', '.option', function () {
             var id = $(this).data('id');
             var answer = $(this).data('option');
             $.ajax({
@@ -56,7 +56,7 @@
                 },
                 dataType: 'json',
                 success: function(response) {
-                    $('.next').removeClass('disabled');
+                    $('.next button').removeClass('disabled');
                     if (response["status"] == "correct") {
                         $('a[data-option]').each(function (e) {
                             if (e == answer) {
@@ -92,8 +92,10 @@
                 }
             });
         });
-        $('.next').on('click', function () {
+        $('.next').on('click', '.button', function () {
+            $('.next button').addClass('disabled');
             ids.push($(this).data('id'));
+            console.log(ids);
             $.ajax({
                 type: "POST",
                 url: "{{ route('next') }}",
@@ -102,8 +104,14 @@
                 },
                 dataType: 'json',
                 success: function(response) {
-                    $('.next').addClass('disabled');
-                    $('.next').attr('data-id', response['question']['id']);
+                    var obj = JSON.parse(response['question']['options']);
+                    $('.next button').attr('data-id', response['question']['id']);
+                    $('.explation').empty();
+                    $('.list-options').empty();
+                    jQuery.each(response["options"], function(i, val) {
+                        $('.list-options').append('<a href="javascript:void(0);" data-id="' + response["question"]["id"] + '" data-option="' + i + '" class="option list-group-item list-group-item-action">' + obj[i] + '</a>');
+                    });
+                    $('.question').text(response["question"]["question"]);
                 },
                 failure: function(response) {
                     console.log(response);
