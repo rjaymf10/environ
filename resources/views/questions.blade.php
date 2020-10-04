@@ -85,7 +85,7 @@
                             }
                         });
                     }
-                    $('.explation').tect(response["explation"]);
+                    $('.explation').text(response["explation"]);
                 },
                 failure: function (response) {
                     console.log(response);
