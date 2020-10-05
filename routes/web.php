@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-
-use App\Question;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,27 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/quiz', function () {
-	$question = Question::select('id', 'question', 'options')->inRandomOrder()->first();
-	return view('questions', compact('question'));
-})->name('questions');
+Route::get('/quiz', 'QuestionController@quiz')->name('questions');
 
-Route::post('/check', function (Request $request) {
-	$question = Question::findOrFail($request->id);
-	if ($question->answer == $request->answer) {
-		return response()->json(array('status' => 'correct', 'explation' => $question->explation));
-	}
-	else {
-		return response()->json(array('status' => 'incorrect', 'correct_answer' => $question->answer, 'explation' => $question->explation));
-	}
-})->name('check');
+Route::post('/check', 'QuestionController@check')->name('check');
 
-Route::post('/quiz/next', function (Request $request) {
-	$ids = array();
-	foreach ($request->ids as $id) {
-		$ids[] = $id;
-	}
-	$question = Question::select('id', 'question', 'options')->inRandomOrder()->whereNotIn('id', $ids)->first();
-	
-	return response()->json(array('question' => $question));
-})->name('next');
+Route::post('/quiz/next', 'QuestionController@next')->name('next');

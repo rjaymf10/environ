@@ -105,7 +105,7 @@
                 },
                 dataType: 'json',
                 success: function(response) {
-                    var obj = JSON.parse(response['question']['options']);
+                    var obj = JSON.parse(response['options']);
                     $('.next button').data('id', response['question']['id']);
                     $('.explation').empty();
                     $('.list-options').empty();
